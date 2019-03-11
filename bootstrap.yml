@@ -1,0 +1,27 @@
+---
+
+- name: Prep For Oracle DB
+  hosts: all
+  tasks:
+  - name: Copy PIP Source Files
+    src: get-pip.py
+    dst: /tmp/get-pip.py
+
+  - name: Copy PIP Module Files
+    src: cx_Oracle-7.1.1.tar.gz
+    dst: /tmp/cx_Oracle-7.1.1.tar.gz
+
+  - name: Install PIP from Source
+    command: chdir=/tmp/ "{{ item }}"
+    with_items:
+    - python get-pip.py
+
+  - name: Extract cx_Oracle PIP Module
+    command: chdir=/tmp/ "{{ item }}"
+    with_items:
+    - tar -zxvf cx_Oracle-7.1.1.tar.gz
+
+  - name: Install cx_Oracle PIP Module
+    command: chdir=/tmp/cx_Oracle-7.1.1 "{{ item }}"
+    with_items:
+    - python setup.py .
